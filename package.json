@@ -1,0 +1,24 @@
+{
+  "name": "alkemy-node",
+  "version": "1.0.0",
+  "description": "Node.js Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Esquiafo/Alkemy-Node.js.git"
+  },
+  "author": "Leonardo Capone",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Esquiafo/Alkemy-Node.js/issues"
+  },
+  "homepage": "https://github.com/Esquiafo/Alkemy-Node.js#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.2"
+  }
+}
