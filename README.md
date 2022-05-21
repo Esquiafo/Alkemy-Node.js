@@ -17,23 +17,23 @@ Recuerda que el objetivo del challenge es entender tu nivel de conocimiento actu
 Requerimientos técnicos:
 
 1. Modelado de Base de Datos
-A Personaje: deberá tener,
-- Imagen.
-- Nombre.
-- Edad.
-- Peso.
-- Historia.
-- Películas o series asociadas.
-B Película o Serie: deberá tener,
-- Imagen.
-- Título.
-- Fecha de creación.
-- Calificación (del 1 al 5).
-- Personajes asociados.
+- - Personaje: deberá tener,
+- - Imagen.
+- - Nombre.
+- - Edad.
+- - Peso.
+- - Historia.
+- - Películas o series asociadas.
+- Película o Serie: deberá tener,
+- - Imagen.
+- - Título.
+- - Fecha de creación.
+- - Calificación (del 1 al 5).
+- - Personajes asociados.
 C Género: deberá tener,
-- Nombre.
-- Imagen.
-- Películas o series asociadas.
+- - Nombre.
+- - Imagen.
+- - Películas o series asociadas.
 2. Autenticación de Usuarios
 Para realizar peticiones a los endpoints subsiguientes el usuario deberá contar con un token que
 obtendrá al autenticarse. Para ello, deberán desarrollarse los endpoints de registro y login, que
