@@ -17,7 +17,7 @@ Recuerda que el objetivo del challenge es entender tu nivel de conocimiento actu
 Requerimientos técnicos:
 
 1. Modelado de Base de Datos
-- - Personaje: deberá tener,
+- Personaje: deberá tener,
 - - Imagen.
 - - Nombre.
 - - Edad.
@@ -30,7 +30,7 @@ Requerimientos técnicos:
 - - Fecha de creación.
 - - Calificación (del 1 al 5).
 - - Personajes asociados.
-C Género: deberá tener,
+- Género: deberá tener,
 - - Nombre.
 - - Imagen.
 - - Películas o series asociadas.
