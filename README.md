@@ -17,20 +17,20 @@ Recuerda que el objetivo del challenge es entender tu nivel de conocimiento actu
 Requerimientos técnicos:
 
 1. Modelado de Base de Datos
-- Personaje: deberá tener,
+A Personaje: deberá tener,
 - Imagen.
 - Nombre.
 - Edad.
 - Peso.
 - Historia.
 - Películas o series asociadas.
-- Película o Serie: deberá tener,
+B Película o Serie: deberá tener,
 - Imagen.
 - Título.
 - Fecha de creación.
 - Calificación (del 1 al 5).
 - Personajes asociados.
-- Género: deberá tener,
+C Género: deberá tener,
 - Nombre.
 - Imagen.
 - Películas o series asociadas.
