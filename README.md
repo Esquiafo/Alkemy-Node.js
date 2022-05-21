@@ -38,6 +38,7 @@ Requerimientos técnicos:
 Para realizar peticiones a los endpoints subsiguientes el usuario deberá contar con un token que
 obtendrá al autenticarse. Para ello, deberán desarrollarse los endpoints de registro y login, que
 permitan obtener el token.
+
 Los endpoints encargados de la autenticación deberán ser:
 - /auth/login
 - /auth/register
