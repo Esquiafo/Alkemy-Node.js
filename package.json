@@ -18,11 +18,15 @@
   },
   "homepage": "https://github.com/Esquiafo/Alkemy-Node.js#readme",
   "dependencies": {
+    "body-parser": "^1.20.0",
     "express": "^4.18.1",
+    "express-oauth2-jwt-bearer": "^1.1.0",
+    "express-session": "^1.17.3",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.19.2"
+    "sequelize": "^6.19.2",
+    "url": "^0.11.0"
   },
   "production": {
     "dialect": "mysql"
-    }
+  }
 }
