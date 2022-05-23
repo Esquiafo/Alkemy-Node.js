@@ -2,12 +2,36 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const url = require('url');
 var session = require('express-session')
-const { Sequelize, DataTypes } = require('sequelize');
-
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+var http = require('http');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// get config vars
+dotenv.config();
+
+// access config var
+process.env.TOKEN_SECRET;
+const { Sequelize, DataTypes } = require('sequelize');
+const res = require('express/lib/response');
+const { decode } = require('jsonwebtoken');
+const { type } = require('express/lib/response');
+
+function generateAccessToken(token) {
+    return jwt.sign(token, process.env.TOKEN_SECRET);
+  }
+function verifyAccessToken(token) {
+    try{
+        jwt.verify(token, process.env.TOKEN_SECRET);
+        return true
+      }catch (err){
+        return false;
+      }
+    
+}
+
+
 
 // Option 3: Passing parameters separately (other dialects)
 const sequelize = new Sequelize('alkemy', 'root', 'root', {
@@ -20,7 +44,7 @@ const sequelize = new Sequelize('alkemy', 'root', 'root', {
 
     sequelize.authenticate()
       .then((result) => {
-        console.log('Result: ',result);
+        console.log('Conectado a la DB');
       })
       .catch((error) => {
         console.log('Error: ', error);
@@ -95,23 +119,22 @@ const Genero = sequelize.define('genero', {
   Pelicula.belongsToMany(Genero, { through: 'Genero_Pelicula' });
 
 
-
-
-var start = async function(a, b) { 
-    // Your async task will execute with await
-
-
-  }
   
 app.get('/character', (req,res) =>{
-    (async () => {
-        await sequelize.sync({ force: true });
-        // Code here
-      })();
-    console.log(req.query)
-    start()
+   res.json(verifyAccessToken(req.headers.authorization))
+   res.redirect('/auth/login', (req,res))
+  
     
   
+});
+app.get('/auth/login', (req,res) =>{
+  verifyAccessToken(req.headers.authorization) ? res.json('Tu token es correcto') : res.json('Tu token es incorrecto')
+  
+
+});
+app.post('/auth/create', (req,res) =>{
+    const token = generateAccessToken({ token: req.body.email });
+    res.json(token);
 });
 app.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+"ERROR"));
