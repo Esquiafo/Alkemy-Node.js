@@ -1,22 +1,19 @@
 const express = require('express');
 const app = express();
-const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-var session = require('express-session')
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-var http = require('http');
+const {Personaje, insertPersonaje, findAllPersonajes, findPersonajesBy, updatePersonaje, deletePersonaje} = require('./models/Personaje')
+const {Pelicula, insertPelicula, findAllPelicula, findPeliculaBy, updatePelicula, deletePelicula} = require('./models/Pelicula')
+const {Genero, insertGenero, findAllGenero, findGeneroBy, updateGenero, deleteGenero} = require('./models/Genero')
+const sequelize = require('./models/db')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// get config vars
-dotenv.config();
 
-// access config var
+// CONFIG Y ACCESS ENV
+dotenv.config();
 process.env.TOKEN_SECRET;
-const { Sequelize, DataTypes } = require('sequelize');
-const res = require('express/lib/response');
-const { decode } = require('jsonwebtoken');
-const { type } = require('express/lib/response');
+
 
 function generateAccessToken(token) {
     return jwt.sign(token, process.env.TOKEN_SECRET);
@@ -30,105 +27,131 @@ function verifyAccessToken(token) {
       }
     
 }
-
-
-
-// Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('alkemy', 'root', 'root', {
-  dialect: 'mysql',
-  dialectOptions: {
-    host: '127.0.0.1',
-    port: '3306',
-  },
-});
-
-    sequelize.authenticate()
-      .then((result) => {
-        console.log('Conectado a la DB');
-      })
-      .catch((error) => {
-        console.log('Error: ', error);
-      });
-
-
-const Personaje = sequelize.define('personaje', {
-    // Model attributes are defined here
-    id:{
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-    },
-    imagen: {
-      type: DataTypes.STRING,
-    },
-    nombre: {
-      type: DataTypes.STRING
-    },
-    edad: {
-        type: DataTypes.INTEGER
-    },
-    peso: {
-      type: DataTypes.INTEGER
-    },
-    historia: {
-        type: DataTypes.STRING
-    },
-
-  });
-const Pelicula = sequelize.define('pelicula', {
-    // Model attributes are defined here
-    id:{
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-    },
-    imagen: {
-      type: DataTypes.STRING,
-    },
-    titulo: {
-      type: DataTypes.STRING
-    },
-    fecha: {
-        type: DataTypes.INTEGER
-    },
-    puntaje: {
-      type: DataTypes.INTEGER
-    },
-    
-
-  });
-
-const Genero = sequelize.define('genero', {
-    // Model attributes are defined here
-    id:{
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-    },
-    imagen: {
-      type: DataTypes.STRING,
-    },
-    nombre: {
-      type: DataTypes.STRING
-    },
-  });
-
+// CREACION DE TABLAS PK
   Personaje.belongsToMany(Pelicula, { through: 'Personaje_Pelicula' });
   Pelicula.belongsToMany(Personaje, { through: 'Personaje_Pelicula' });
   Genero.belongsToMany(Pelicula, { through: 'Genero_Pelicula' });
   Pelicula.belongsToMany(Genero, { through: 'Genero_Pelicula' });
-
-
-  
+  sequelize.sync()
+// -----> CRUD PERSONAJE INICIO <-----
 app.get('/character', (req,res) =>{
-   res.json(verifyAccessToken(req.headers.authorization))
-   res.redirect('/auth/login', (req,res))
-  
+    verifyAccessToken(req.headers.authorization) 
     
+    ? 
+    Object.keys(req.query).length > 0 
+      ? 
+      findPersonajesBy(req.query).then(x=> res.json(JSON.parse(x)))
+      :
+      findAllPersonajes().then(x=> res.json(JSON.parse(x)))
+  
+    : 
+    res.json('Tu token es incorrecto')
   
 });
+app.post('/character', (req,res) =>{
+    verifyAccessToken(req.headers.authorization) 
+    
+    ? (
+
+      insertPersonaje(req.query).then(x=> res.json(JSON.parse(x)))
+
+    )
+     
+    : res.json('Tu token es incorrecto')
+  
+});
+app.put('/character', (req,res) =>{
+  verifyAccessToken(req.headers.authorization) 
+  
+  ? 
+  Object.keys(req.query).length > 0 
+    ? 
+    updatePersonaje(req.query).then(x=> res.json(JSON.parse(x)))
+    :
+    res.json('Error en la Query')
+
+  : 
+  res.json('Tu token es incorrecto')
+
+});
+app.delete('/character', (req,res) =>{
+  verifyAccessToken(req.headers.authorization) 
+  
+  ? 
+  Object.keys(req.query.id).length > 0 
+    ? 
+    deletePersonaje(req.query).then(res.json('Acabas de borrar el Personaje con ID: '+ req.query.id))
+    :
+    res.json('Error en la Query')
+
+  : 
+  res.json('Tu token es incorrecto')
+
+});
+// -----> CRUD PERSONAJE FIN <-----
+
+// -----> CRUD PELICULA INICIO <-----
+app.get('/movie', (req,res) =>{
+  verifyAccessToken(req.headers.authorization) 
+  
+  ? 
+  Object.keys(req.query).length > 0 
+    ? 
+    findPeliculaBy(req.query).then(x=> res.json(JSON.parse(x)))
+    :
+    findAllPelicula().then(x=> res.json(JSON.parse(x)))
+
+  : 
+  res.json('Tu token es incorrecto')
+
+});
+app.post('/movie', (req,res) =>{
+  verifyAccessToken(req.headers.authorization) 
+  
+  ? (
+
+    insertPelicula(req.query).then(x=> res.json(JSON.parse(x)))
+
+  )
+   
+  : res.json('Tu token es incorrecto')
+
+});
+app.put('/movie', (req,res) =>{
+verifyAccessToken(req.headers.authorization) 
+
+? 
+Object.keys(req.query).length > 0 
+  ? 
+  updatePelicula(req.query).then(x=> res.json(JSON.parse(x)))
+  :
+  res.json('Error en la Query')
+
+: 
+res.json('Tu token es incorrecto')
+
+});
+app.delete('/movies', (req,res) =>{
+verifyAccessToken(req.headers.authorization) 
+
+? 
+Object.keys(req.query.id).length > 0 
+  ? 
+  deletePelicula(req.query).then(res.json('Acabas de borrar el Pelicula con ID: '+ req.query.id))
+  :
+  res.json('Error en la Query')
+
+: 
+res.json('Tu token es incorrecto')
+
+});
+// -----> CRUD Pelicula FIN <-----
+
+// -----> AUTH INICIO <-----
 app.get('/auth/login', (req,res) =>{
-  verifyAccessToken(req.headers.authorization) ? res.json('Tu token es correcto') : res.json('Tu token es incorrecto')
+  verifyAccessToken(req.headers.authorization) 
+  ? res.json('Tu token es correcto') 
+  : res.json('Tu token es incorrecto')
   
 
 });
@@ -136,6 +159,7 @@ app.post('/auth/create', (req,res) =>{
     const token = generateAccessToken({ token: req.body.email });
     res.json(token);
 });
+// -----> AUTH FIN <-----
 app.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+"ERROR"));
 });
